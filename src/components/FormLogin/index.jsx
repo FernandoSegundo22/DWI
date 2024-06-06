@@ -1,6 +1,5 @@
 import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
 import './FormLogin.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +13,8 @@ const FormLogin = () => {
     const useAuthData = useAuth();
     console.log(useAuthData);
 
+    const {login} = useAuthData
+
     const navigate = useNavigate();
 
     const [loginError, setLoginError] = useState(false);
@@ -21,26 +22,26 @@ const FormLogin = () => {
     const [loading, setLoading] = useState(false);
 
     const onFinish = async (values) => {
-        setLoading(true); //Establece el estado de carga a true al enviar el formulario
+        setLoading(true);
         setLoginError(false);
-        try{
+        try {
             const response = await authService.loginF(values.username, values.password);
-            if(response && response.data){
-                localStorage.setItem('token', response.data.token);
-                login(response.data.token);
-                console.log(response.data.token);
+            console.log('Response:', response);
+            if (response && response.data && response.data.generatedToken) {
+                const token = response.data.generatedToken;
+                console.log("inicio correcto");
+                localStorage.setItem('token', response.data.generatedToken);
+                login(response.data.generatedToken);
                 navigate('/');
-            }else{
+            } else {
                 console.log('Error de inicio inesperado');
                 setLoginError(true);
             }
-        }
-        catch(error){
+        } catch (error) {
             console.error('Error en el login', error.response ? error.response.data : error.message);
             setLoginError(true);
-        }
-        finally {
-            setLoading(false); //Establece el estado de carga a false despues de recibir la respuesta
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -90,7 +91,7 @@ const FormLogin = () => {
                             Iniciar Sesión
                         </Button>
                     </Form.Item>
-                    ¿Aún no tienes cuenta? <Link to="/register">Registrate</Link>
+                    ¿Aún no tienes cuenta? <a href="/register">Registrate</a>
                 </Form>
             </Card>
         </>
