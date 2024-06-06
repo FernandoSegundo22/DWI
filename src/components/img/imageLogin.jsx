@@ -1,9 +1,9 @@
-import mudkip from '../../assets/img/descarga.jpg'
+import smile from '../../assets/descarga.jpg'
 
 const ImageLogin = () => {
     return (
         <div className="App">
-            <img src={mudkip} alt="mudkip"/>
+            <img src={smile} alt="smile" style={{ width: '200px' }}/>
         </div>
     );
 }
